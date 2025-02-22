@@ -10,7 +10,6 @@ import (
 
 func GetServer(remote string, config *config.Config) *url.URL {
 	size := len(config.Loadbalancer.Servers)
-	app.Logger.Debugf("Choosing from %d servers", size)
 
 	var idx uint32
 	switch config.Loadbalancer.Algorithm {
@@ -24,10 +23,8 @@ func GetServer(remote string, config *config.Config) *url.URL {
 		break
 	}
 
-	app.Logger.Debugf("Index :: %d", idx)
-
 	host := config.Loadbalancer.Servers[idx].Host
-	app.Logger.Debugf("Host :: %s", host)
+	app.Logger.Debugf(":: %s", host)
 
 	res, err := url.Parse(host)
 	if err != nil {
