@@ -1,0 +1,11 @@
+loadbalancer:
+  listen: 8080
+  # possible RoundRobbing, HASH, Weighted
+  algorithm: RoundRobbing
+  servers:
+    - name: Server1
+      host: http://localhost:8180
+    - name: Server2
+      host: http://localhost:8181
+    - name: Server3
+      host: http://localhost:8182
