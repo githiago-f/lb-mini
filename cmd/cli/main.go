@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"net/http/httputil"
 
 	"github.com/githiago-f/lb-mini/internals/algorithm"
 	"github.com/githiago-f/lb-mini/internals/app"
@@ -15,7 +14,7 @@ func main() {
 
 	config := config.Load()
 
-	port := fmt.Sprintf(":%d", config.Loadbalancer.Listen)
+	port := fmt.Sprintf(":%d", config.Listen)
 	app.Logger.Infof("Listening at *.*.*.*%s\n", port)
 
 	http.HandleFunc("/", forwardRequest(config))
@@ -26,8 +25,7 @@ type Handler func(res http.ResponseWriter, req *http.Request)
 
 func forwardRequest(config *config.Config) Handler {
 	return func(res http.ResponseWriter, req *http.Request) {
-		url := algorithm.GetServer(req.RemoteAddr, config)
-		proxy := httputil.NewSingleHostReverseProxy(url)
+		proxy := algorithm.GetServer(req.RemoteAddr, config)
 		proxy.ServeHTTP(res, req)
 	}
 }

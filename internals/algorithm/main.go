@@ -1,18 +1,16 @@
 package algorithm
 
 import (
-	"net/url"
-	"os"
+	"net/http/httputil"
 
-	"github.com/githiago-f/lb-mini/internals/app"
 	"github.com/githiago-f/lb-mini/internals/config"
 )
 
-func GetServer(remote string, config *config.Config) *url.URL {
-	size := len(config.Loadbalancer.Servers)
+func GetServer(remote string, config *config.Config) *httputil.ReverseProxy {
+	size := len(config.Servers)
 
 	var idx uint32
-	switch config.Loadbalancer.Algorithm {
+	switch config.Algorithm {
 	case "RoundRobbing":
 		idx = RoundRobbing(size)
 		break
@@ -23,14 +21,5 @@ func GetServer(remote string, config *config.Config) *url.URL {
 		break
 	}
 
-	host := config.Loadbalancer.Servers[idx].Host
-	app.Logger.Debugf(":: %s", host)
-
-	res, err := url.Parse(host)
-	if err != nil {
-		app.Logger.Fatalf("%v while trying to parse %s", err, host)
-		os.Exit(1)
-	}
-
-	return res
+	return config.Servers[idx].Proxy
 }
