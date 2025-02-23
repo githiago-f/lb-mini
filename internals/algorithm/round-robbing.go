@@ -9,8 +9,8 @@ var (
 
 func RoundRobbing(size int) uint32 {
 	mu.Lock()
+	defer mu.Unlock()
 	res := ((lastIndex + 1) % size)
 	lastIndex++
-	mu.Unlock()
 	return uint32(res)
 }

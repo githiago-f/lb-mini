@@ -55,5 +55,7 @@ func Load() *Config {
 		res.Servers[i] = &Server{Proxy: httputil.NewSingleHostReverseProxy(url)}
 	}
 
+	app.Logger.Infof("Balance algorithm :: %s", res.Algorithm)
+
 	return res
 }
